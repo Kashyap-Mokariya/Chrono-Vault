@@ -1,1 +1,2 @@
 pnpm install @supabase/supabase-js @supabase/ssr
+nn i --save-dev eslint-config-standard eslint-plugin-tailwindcss eslint-config-prettier prettier

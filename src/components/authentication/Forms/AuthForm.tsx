@@ -13,7 +13,7 @@ const AuthForm = () => {
     return (
         <div className='space-y-6'>
             <div className='flex flex-col text-center space-y-2'>
-                <h1 className='text-2xl font-semibold tracking-tight'>
+                <h1 className='flex form-title justify-center'>
                     {
                         mode === "reset" ? "Reset Password" : mode === "login" ? "Login" : "Sign Up"
                     }
