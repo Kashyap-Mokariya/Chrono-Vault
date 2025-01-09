@@ -23,17 +23,20 @@ import { redirect } from 'next/navigation'
 const passValidationRegex = new RegExp(`^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})`)
 
 const formSchema = z.object({
-    fullName: z.string().min(3, {
-        message: "Name must be at least 3 characters long!"
-    }),
+    fullName: z.string()
+        .min(1, { message: "Name is required!" })
+        .min(3, {
+            message: "Name must be at least 3 characters long!"
+        }),
 
-    email: z.string().email({
-        message: "Please enter a valid email address!"
-    }),
+    email: z.string()
+        .min(1, { message: "Email is required!" })
+        .email({
+            message: "Please enter a valid email address!"
+        }),
 
-    password: z.string({
-        required_error: "Password is required!",
-    })
+    password: z.string()
+        .min(1, { message: "Password is required!" })
         .min(8, {
             message: "Password must be at least 8 characters long!"
         })
@@ -102,11 +105,17 @@ const SignUpForm = ({ className }: { className?: string }) => {
                         name="fullName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Full Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter your name" {...field} />
-                                </FormControl>
-                                <FormMessage />
+                                <div className='shad-form-item'>
+                                    <FormLabel className='shad-form-label'>Full Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Enter your full name"
+                                            className='shad-input'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className='shad-form-message' />
                             </FormItem>
                         )}
                     />
@@ -115,11 +124,17 @@ const SignUpForm = ({ className }: { className?: string }) => {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="name@example.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
+                                <div className='shad-form-item'>
+                                    <FormLabel className='shad-form-label'>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="name@example.com"
+                                            className='shad-input'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className='shad-form-message' />
                             </FormItem>
                         )}
                     />
@@ -128,11 +143,18 @@ const SignUpForm = ({ className }: { className?: string }) => {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input type='password' placeholder="Enter your password" {...field} />
-                                </FormControl>
-                                <FormMessage />
+                                <div className='shad-form-item'>
+                                    <FormLabel className='shad-form-label'>Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type='password'
+                                            placeholder="Enter your password"
+                                            className='shad-input'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className='shad-form-message' />
                             </FormItem>
                         )}
                     />
@@ -141,15 +163,22 @@ const SignUpForm = ({ className }: { className?: string }) => {
                         name="confirmPassword"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Confirm Password</FormLabel>
-                                <FormControl>
-                                    <Input type='password' placeholder="Confirm your password" {...field} />
-                                </FormControl>
-                                <FormMessage />
+                                <div className='shad-form-item'>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type='password'
+                                            placeholder="Confirm your password"
+                                            className='shad-input'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className='shad-form-message' />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className='w-full' disabled={loading}>
+                    <Button type="submit" className='w-full form-submit-button' disabled={loading}>
                         {loading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
                         Sign Up
                     </Button>

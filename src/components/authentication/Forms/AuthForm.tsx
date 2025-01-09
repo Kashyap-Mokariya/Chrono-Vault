@@ -20,7 +20,7 @@ const AuthForm = () => {
                 </h1>
                 <p className='text-sm text-muted-foreground'>
                     {
-                        mode === "reset" ? "Enter your email below to reset your password" : mode === "login" ? "Enter your email to login to your account" : "Enter your information below to create an account"
+                        mode === "reset" ? "Enter your email below to reset your password" : mode === "login" ? "Enter your credentials to login to your account" : "Enter your information below to create an account"
                     }
                 </p>
             </div>
@@ -52,7 +52,7 @@ const AuthForm = () => {
                             </Button>
                         </div>
 
-                        <p className='p-6 text-center text-sm text-muted-foreground'>
+                        <p className='p-5 text-center text-sm text-muted-foreground'>
                             By clicking sign up, you agree to our <Link href={"#"} className='underline underline-offset-4 hover:text-primary'>Terms of Service</Link> and <Link href={"#"} className='underline underline-offset-4 hover:text-primary'>Privacy Policy</Link>
                         </p>
                     </>

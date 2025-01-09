@@ -70,7 +70,7 @@ const AuthenticationPage = () => {
 
             <section className='flex flex-col justify-center items-center mx-auto'>
                 <div>
-                    <div className='max-w-xl w-[350px] mx-auto'>
+                    <div className='max-w-xl w-[450px] mx-auto'>
                         <AuthForm />
                     </div>
                 </div>

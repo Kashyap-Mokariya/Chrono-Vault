@@ -45,15 +45,21 @@ const ResetPasswordForm = ({ className }: { className?: string }) => {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="name@example.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
+                                <div className='shad-form-item'>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="name@example.com"
+                                            className='shad-input'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className='shad-form-message' />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className='w-full'>Reset Password</Button>
+                    <Button type="submit" className='w-full form-submit-button'>Reset Password</Button>
                 </form>
             </Form>
         </div>
