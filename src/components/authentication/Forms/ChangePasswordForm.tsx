@@ -15,27 +15,33 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
-import { Login, SignUp } from '@/app/actions/auth-actions'
-import { useRouter } from "next/navigation";
 import { Loader2 } from 'lucide-react'
+import { toast } from "sonner"
+import { ChangePassword } from '@/app/actions/auth-actions'
+import { useRouter } from "next/navigation";
+
+const passValidationRegex = new RegExp(`^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})`)
 
 const formSchema = z.object({
-    email: z.string()
-        .min(1, { message: "Email is required!" })
-        .email({
-            message: "Please enter a valid email address!"
-        }),
-
-    password: z.string()
+    newPassword: z.string()
         .min(1, { message: "Password is required!" })
         .min(8, {
-            message: "Incorrect email address or password!"
-        }),
+            message: "Password must be at least 8 characters long!"
+        })
+        .regex(
+            passValidationRegex, {
+            message: "Password must contain 8 characters, 1 Uppercase letter, 1 Lowercase letter, 1 Number and 1 Special character"
+        }
+        ),
+
+    confirmPassword: z.string()
+        .min(1, { message: "Password is required!" })
+}).refine(data => data.newPassword === data.confirmPassword, {
+    message: "Incorrect password",
+    path: ["confirmPassword"]
 })
 
-
-const LoginForm = ({ className }: { className?: string }) => {
+const ChangePasswordForm = ({ className }: { className?: string }) => {
 
     const [loading, setLoading] = useState(false)
 
@@ -46,71 +52,59 @@ const LoginForm = ({ className }: { className?: string }) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
-            password: "",
+            newPassword: "",
+            confirmPassword: "",
         },
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        toast.loading("Signing in...", { id: toastId })
+
+        toast.loading("Changing password...", { id: toastId })
 
         setLoading(true)
 
-        const formData = new FormData()
-
-        formData.append('email', values.email)
-        formData.append('password', values.password)
-
         try {
-            const { success, error } = await Login(formData)
+
+            const { success, error } = await ChangePassword(values.newPassword)
 
             if (!success) {
                 toast.error(String(error), { id: toastId })
                 setLoading(false)
             }
             else {
-                toast.success("Signed in successfully!", { id: toastId })
+                toast.success("Password updated successfully! You can now login using your new password.", { id: toastId })
                 setLoading(false)
-                router.push("/dashboard")
+                router.push("/login")
             }
         } catch (error) {
             toast.error(String(error), { id: toastId })
+            console.log(error)
         }
         finally {
             setLoading(false)
         }
+
     }
 
     return (
         <div className={cn("grid gap-6", className)}>
+            <div className='flex flex-col text-center space-y-2'>
+                <h1 className='flex form-title justify-center'>
+                    Change Password
+                </h1>
+                <p className='text-sm text-muted-foreground'>
+                    Enter a new password below to change/update your password
+                </p>
+            </div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                         control={form.control}
-                        name="email"
+                        name="newPassword"
                         render={({ field }) => (
                             <FormItem>
                                 <div className='shad-form-item'>
-                                    <FormLabel className='shad-form-label'>Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="name@example.com"
-                                            className='shad-input'
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className='shad-form-message' />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <div className='shad-form-item'>
-                                    <FormLabel className='shad-form-label'>Password</FormLabel>
+                                    <FormLabel className='shad-form-label'>New Password</FormLabel>
                                     <FormControl>
                                         <Input
                                             type='password'
@@ -124,14 +118,37 @@ const LoginForm = ({ className }: { className?: string }) => {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className='w-full form-submit-button' disabled={loading}>
+                    <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className='shad-form-item'>
+                                    <FormLabel className='shad-form-label'>Confirm Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type='password'
+                                            placeholder="Confirm your password"
+                                            className='shad-input'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className='shad-form-message' />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit" className='w-full form-submit-button pt-4' disabled={loading}>
                         {loading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-                        Login
+                        {loading ? "Changing password..." : "Change password"}
                     </Button>
+                    <div className='text-sm text-muted-foreground text-center'>
+                        Make sure to remember your new password or store it securely
+                    </div>
                 </form>
             </Form>
         </div>
     )
 }
 
-export default LoginForm
+export default ChangePasswordForm

@@ -57,3 +57,30 @@ export async function Logout(): Promise<void> {
 
     redirect("/login")
 }
+
+export async function ResetEmailConfirmation(values: {email: string}): Promise<AuthResponse> {
+    const supabase = await createClient()
+
+    const {data: resetPassData, error} = await supabase.auth.resetPasswordForEmail(values.email)
+
+    return {
+        error: error?.message || "There was an error while resetting the password",
+        success: !error,
+        data: resetPassData || null
+    }
+}
+
+export async function ChangePassword(newPassword: string): Promise<AuthResponse> {
+
+    const supabase = await createClient()
+
+    const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
+    })
+
+    return {
+        error: error?.message || "There was an error while updating the password",
+        success: !error,
+        data: data || null
+    }
+}

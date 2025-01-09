@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { toast } from "sonner"
 import { SignUp } from '@/app/actions/auth-actions'
-import { redirect } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 const passValidationRegex = new RegExp(`^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})`)
 
@@ -58,6 +58,8 @@ const SignUpForm = ({ className }: { className?: string }) => {
 
     const [loading, setLoading] = useState(false)
 
+    const router = useRouter();
+
     const toastId = useId()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -82,17 +84,26 @@ const SignUpForm = ({ className }: { className?: string }) => {
         formData.append('password', values.password)
         formData.append('confirmPassword', values.confirmPassword)
 
-        const { success, error } = await SignUp(formData)
+        try {
+            const { success, error } = await SignUp(formData)
 
-        if (!success) {
+            if (!success) {
+                toast.error(String(error), { id: toastId })
+                setLoading(false)
+            }
+            else {
+                toast.success("User created successfully!", { id: toastId })
+                setLoading(false)
+                router.push("/login")
+            }
+        } catch (error) {
             toast.error(String(error), { id: toastId })
+        }
+        finally {
             setLoading(false)
         }
-        else {
-            toast.success("User created successfully!", { id: toastId })
-            setLoading(false)
-            redirect("/login")
-        }
+
+        
 
     }
 
