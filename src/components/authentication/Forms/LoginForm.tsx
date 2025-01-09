@@ -71,7 +71,7 @@ const LoginForm = ({ className }: { className?: string }) => {
             else {
                 toast.success("Signed in successfully!", { id: toastId })
                 setLoading(false)
-                router.push("/dashboard")
+                router.push("/")
             }
         } catch (error) {
             toast.error(String(error), { id: toastId })

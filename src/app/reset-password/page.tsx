@@ -1,8 +1,5 @@
 import Image from 'next/image'
-import AuthImage from '@/public/Abstract Curves and Colors.jpeg'
 import React from 'react'
-import Logo from '@/components/Logo'
-import AuthForm from '@/components/authentication/Forms/AuthForm'
 import ChangePasswordForm from '@/components/authentication/Forms/ChangePasswordForm'
 
 const ResetPasswordPage = () => {
