@@ -5,7 +5,7 @@ import React from 'react'
 import { GetUserInfo } from '../actions/user-actions'
 import { redirect } from 'next/navigation'
 
-const layout = async ({children}: {children: React.ReactNode}) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
 
   const { success, data: currentUser, error } = await GetUserInfo()
 
@@ -20,15 +20,15 @@ const layout = async ({children}: {children: React.ReactNode}) => {
     <main className='flex h-screen'>
       <Sidebar email={email} fullName={fullName} />
 
-        <section className='flex h-full flex-1 flex-col'>
-            <MobileNavigation />
-            <Header />
+      <section className='flex h-full flex-1 flex-col'>
+        <MobileNavigation email={email} fullName={fullName} />
+        <Header />
 
-            <div className='main-content'>
-                {children}
-            </div>
-        </section>
-      
+        <div className='main-content'>
+          {children}
+        </div>
+      </section>
+
     </main>
   )
 }

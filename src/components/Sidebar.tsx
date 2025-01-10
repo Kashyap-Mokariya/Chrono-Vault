@@ -20,7 +20,7 @@ const Sidebar = ({ email, fullName }: Props) => {
         <aside className='sidebar'>
             <Link href={"/"}>
                 <Image
-                    src={"/logo-full-brand.svg"}
+                    src={"/assets/icons/logo-full-brand.svg"}
                     alt='logo'
                     width={200}
                     height={50}
@@ -76,7 +76,7 @@ const Sidebar = ({ email, fullName }: Props) => {
                 />
 
                 <div className='hidden lg:block'>
-                    <p className='subtitle-2 capitalize'>
+                    <p className='subtitle-2'>
                         {fullName}
                     </p>
                     <p className='caption'>
