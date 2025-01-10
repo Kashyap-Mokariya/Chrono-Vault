@@ -7,7 +7,11 @@ import FileUploader from './FileUploader'
 import Search from './Search'
 import { Logout } from '@/app/actions/auth-actions'
 
-const Header = () => {
+interface Props {
+  userId?: string | null
+}
+
+const Header = ({userId}: Props) => {
 
   const handleLogout = async () => {
     await Logout()
@@ -18,7 +22,7 @@ const Header = () => {
       <Search />
 
       <div className='header-wrapper'>
-        <FileUploader />
+        {userId && <FileUploader userId={userId} />}
 
         <form>
           <Button

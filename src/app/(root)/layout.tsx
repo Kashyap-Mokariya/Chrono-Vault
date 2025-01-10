@@ -14,7 +14,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     return redirect("/login")
   }
 
-  const { email, fullName } = currentUser
+  const { email, fullName, userId } = currentUser
 
   return (
     <main className='flex h-screen'>
@@ -22,7 +22,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
       <section className='flex h-full flex-1 flex-col'>
         <MobileNavigation email={email} fullName={fullName} />
-        <Header />
+        <Header userId={userId ? userId : undefined} />
 
         <div className='main-content'>
           {children}

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server"
 interface UserData {
     email: string | null
     fullName: string | null
+    userId: string | null
 }
 
 interface AuthResponse {
@@ -19,11 +20,12 @@ export async function GetUserInfo(): Promise<AuthResponse> {
     const { data: { user }, error } = await supabase.auth.getUser()
 
     const email = user?.email || null
+    const userId = user?.id || null
     const fullName = user?.user_metadata?.fullName || null
 
     return {
         error: error?.message || "There was an error while fetching the user details",
         success: !error,
-        data: { email, fullName }
+        data: { email, fullName, userId }
     }
 }
