@@ -1,37 +1,29 @@
-// "use server"
+import { getFileType } from "@/lib/utils"
+import { Database } from "../../../database.types"
+import { createSupabaseClient } from "@/lib/supabase/client"
 
-// import { createClient } from "@/lib/supabase/server"
-
-// export const uploadFile = async ({
-//     file,
-//     ownerId,
-//     accountId,
-//     path
-// }: UploadFileProps) => {
-
-// }
-
-"use server";
-
-import { createClient } from "@/lib/supabase/server";
-import { getFileType } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
-import { Database } from "../../../database.types";
 
 const handleError = (error: unknown, message: string) => {
-    console.log(error, message);
-    throw error;
+    console.log(error, message)
+    throw error
 };
+
+function getStorage() {
+    const {storage} = createSupabaseClient()
+
+    return storage
+}
 
 export const uploadFile = async ({
     file,
     userId,
     path,
 }: UploadFileProps) => {
-    const supabase = await createClient();
+    const supabase = createSupabaseClient()
+    const storage = getStorage()
 
     try {
-        const {data, error} = await supabase.storage
+        const {data, error} = await storage
             .from("files")
             .upload(userId + '/' + file.name, file);
 
@@ -41,14 +33,14 @@ export const uploadFile = async ({
 
         console.log("file data: ", data)
 
-        const { data: urlData} = await supabase.storage.from("files").createSignedUrl(data ? data.id : "", 3600)
+        const urlData = await storage.from("files").getPublicUrl(data ? data.path : "").data.publicUrl
 
         console.log(urlData)
 
         const fileDocument: Database["public"]["Tables"]["files"]["Insert"] = {
             type: getFileType(data ? data.path : "").type,
             name: file.name,
-            url: urlData?.signedUrl || "",
+            url: urlData,
             extension: getFileType(data ? data.path : "").extension,
             size: file.size,
             user_id: userId,
@@ -64,10 +56,8 @@ export const uploadFile = async ({
             handleError(dbError, "Failed to create file document in database");
         }
 
-        revalidatePath(path);
         return fileDocument;
     } catch (error) {
         handleError(error, "Failed to upload file");
     }
 };
-

@@ -10,6 +10,7 @@ import { MAX_FILE_SIZE } from '@/constants/constants'
 import { toast } from 'sonner'
 import { uploadFile } from '@/app/actions/file-actions'
 import { usePathname } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 interface Props {
   userId: string,
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const FileUploader = ({ userId, className }: Props) => {
+
+  const router = useRouter()
 
   const path = usePathname()
 
@@ -43,12 +46,17 @@ const FileUploader = ({ userId, className }: Props) => {
               setFiles((prevFiles) =>
                 prevFiles.filter((f) => f.name !== file.name)
               );
+
+              toast.success(`${file.name} uploaded successfully!`, { id: toastId })
+
+              router.push(path);
             }
           },
         );
       });
 
       await Promise.all(uploadPromises);
+
     },
     [userId, path],
   );
