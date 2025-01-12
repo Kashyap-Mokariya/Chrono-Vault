@@ -22,7 +22,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
       <section className='flex h-full flex-1 flex-col'>
         <MobileNavigation email={email} fullName={fullName} />
-        <Header userId={userId ? userId : undefined} />
+        <Header userId={userId ? userId : undefined} fullName={fullName ? fullName : ""} />
 
         <div className='main-content'>
           {children}

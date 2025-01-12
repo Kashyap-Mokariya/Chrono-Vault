@@ -1,7 +1,6 @@
 import { getFileType } from "@/lib/utils"
-import { Database } from "../../../database.types"
+import { Database } from "../../../../database.types"
 import { createSupabaseClient } from "@/lib/supabase/client"
-
 
 const handleError = (error: unknown, message: string) => {
     console.log(error, message)
@@ -9,7 +8,7 @@ const handleError = (error: unknown, message: string) => {
 };
 
 function getStorage() {
-    const {storage} = createSupabaseClient()
+    const { storage } = createSupabaseClient()
 
     return storage
 }
@@ -17,13 +16,13 @@ function getStorage() {
 export const uploadFile = async ({
     file,
     userId,
-    path,
+    fullName,
 }: UploadFileProps) => {
     const supabase = createSupabaseClient()
     const storage = getStorage()
 
     try {
-        const {data, error} = await storage
+        const { data, error } = await storage
             .from("files")
             .upload(userId + '/' + file.name, file);
 
@@ -44,6 +43,7 @@ export const uploadFile = async ({
             extension: getFileType(data ? data.path : "").extension,
             size: file.size,
             user_id: userId,
+            fullname: fullName
         };
 
         const { error: dbError } = await supabase

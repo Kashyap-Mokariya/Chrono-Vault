@@ -1,0 +1,71 @@
+import { getFiles } from '@/app/actions/File actions/get-files-actions'
+import { GetUserInfo } from '@/app/actions/user-actions'
+import Card from '@/components/Card '
+import Sort from '@/components/Sort'
+import { redirect } from 'next/navigation'
+import React from 'react'
+
+interface SupabaseFile {
+    id: string
+    url: string
+    name: string
+    type: string
+    size: number
+    extension: string
+    created_at: string
+    fullname: string
+}
+
+const page = async ({ params }: SearchParamProps) => {
+
+    const type = (await params)?.type as string
+
+    const { success, data: currentUser, error } = await GetUserInfo()
+
+    if (!success || !currentUser) {
+        console.error(error)
+        return redirect("/login")
+    }
+
+    const { email, fullName, userId } = currentUser
+
+    const files = await getFiles({ userId, email })
+
+    return (
+        <div className='page-container'>
+            <section className='w-full'>
+                <h1 className='h1 capitalize'>
+                    {type}
+                </h1>
+
+                <div className='total-size-section'>
+                    <p className='body-1'>
+                        Total: <span className='h5'>0MB</span>
+
+                    </p>
+
+                    <div className='sort-container'>
+                        <p className='body-1 hidden sm:block text-light-200'>
+                            Sort by:
+                        </p>
+
+                        <Sort />
+                    </div>
+                </div>
+            </section>
+
+            {/* Render files dynamically */}
+            {files && files.length > 0 ? (
+                <section className="file-list">
+                    {files.map((file: SupabaseFile) => (
+                        <Card key={file.id} file={file} />
+                    ))}
+                </section>
+            ) : (
+                <p className="empty-list">No files uploaded</p>
+            )}
+        </div>
+    )
+}
+
+export default page

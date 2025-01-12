@@ -8,16 +8,17 @@ import Image from 'next/image'
 import Thumbnail from './Thumbnail'
 import { MAX_FILE_SIZE } from '@/constants/constants'
 import { toast } from 'sonner'
-import { uploadFile } from '@/app/actions/file-actions'
+import { uploadFile } from '@/app/actions/File actions/upload-actions'
 import { usePathname } from 'next/navigation'
 import { useRouter } from "next/navigation";
 
 interface Props {
   userId: string,
+  fullName: string,
   className?: string
 }
 
-const FileUploader = ({ userId, className }: Props) => {
+const FileUploader = ({ userId, className, fullName }: Props) => {
 
   const router = useRouter()
 
@@ -40,7 +41,7 @@ const FileUploader = ({ userId, className }: Props) => {
           toast.error(String(`${file.name} is too large. Max file size is 50MB.`), { id: toastId })
         }
 
-        return uploadFile({ file, userId, path }).then(
+        return uploadFile({ file, userId, path, fullName }).then(
           (uploadedFile) => {
             if (uploadedFile) {
               setFiles((prevFiles) =>

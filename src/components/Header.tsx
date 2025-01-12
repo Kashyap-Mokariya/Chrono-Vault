@@ -9,9 +9,10 @@ import { Logout } from '@/app/actions/auth-actions'
 
 interface Props {
   userId?: string | null
+  fullName: string
 }
 
-const Header = ({userId}: Props) => {
+const Header = ({userId, fullName}: Props) => {
 
   const handleLogout = async () => {
     await Logout()
@@ -22,7 +23,7 @@ const Header = ({userId}: Props) => {
       <Search />
 
       <div className='header-wrapper'>
-        {userId && <FileUploader userId={userId} />}
+        {userId && <FileUploader userId={userId} fullName={fullName} />}
 
         <form>
           <Button
