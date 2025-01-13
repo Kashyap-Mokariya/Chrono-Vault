@@ -23,6 +23,8 @@ import Link from 'next/link'
 import { constructDownloadUrl } from '@/lib/utils'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
+import { renameFile } from '@/app/actions/File actions/rename-file-action'
+import { usePathname } from 'next/navigation'
 
 interface SupabaseFile {
   id: string
@@ -42,6 +44,7 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
   const [action, setAction] = useState<ActionType | null>(null)
   const [fileName, setFileName] = useState(file.name)
   const [isLoading, setIsLoading] = useState(false)
+  const path = usePathname()
 
   const closeAllModals = () => {
     setIsModalOpen(false)
@@ -51,9 +54,50 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
   }
 
   const handleAction = async () => {
+    if (!action) return;
 
+    setIsLoading(true);
+
+    try {
+      let success = false;
+
+      const actions = {
+        rename: async () => {
+          const updatedFile = await renameFile({
+            fileId: file.id,
+            name: fileName,
+            extension: file.extension,
+            path,
+          });
+          if (updatedFile && updatedFile?.name) {
+            setFileName(updatedFile.name);
+            return true;
+          }
+          return false;
+        },
+        share: async () => {
+          console.log("Share");
+          return true;
+        },
+        delete: async () => {
+          console.log("Delete");
+          return true;
+        },
+      };
+
+      const actionHandler = actions[action.value as keyof typeof actions];
+      if (actionHandler) {
+        success = await actionHandler();
+      }
+
+    } catch (error) {
+      console.error("Action failed:", error);
+    } finally {
+      setIsLoading(false);
+      closeAllModals()
+    }
   }
-
+  
   const renderDialogContent = () => {
 
     if (!action)
