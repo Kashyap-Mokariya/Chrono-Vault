@@ -19,6 +19,17 @@ declare interface UploadFileProps {
   path: string
   fullName: string
 }
+declare interface SupabaseFile {
+  id: string
+  url: string
+  name: string
+  type: string
+  size: number
+  extension: string
+  created_at: string
+  fullname: string
+  updated_at: string
+}
 declare interface GetFilesProps {
   types: FileType[];
   searchText?: string;

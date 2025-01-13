@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle
@@ -25,17 +24,7 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { renameFile } from '@/app/actions/File actions/rename-file-action'
 import { usePathname } from 'next/navigation'
-
-interface SupabaseFile {
-  id: string
-  url: string
-  name: string
-  type: string
-  size: number
-  extension: string
-  created_at: string
-  fullname: string
-}
+import { FileDetails } from './Modal/ActionsModalContent'
 
 const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
 
@@ -97,9 +86,8 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
       closeAllModals()
     }
   }
-  
-  const renderDialogContent = () => {
 
+  const renderDialogContent = () => {
     if (!action)
       return null
 
@@ -119,6 +107,9 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
               onChange={(e) => setFileName(e.target.value)}
             />
           )}
+
+          {value === "details" && (<FileDetails file={file} />)}
+
         </DialogHeader>
         {
           ["rename", "delete", "share"].includes(value) && (

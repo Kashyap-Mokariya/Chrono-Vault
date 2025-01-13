@@ -5,17 +5,6 @@ import { convertFileSize } from '@/lib/utils'
 import FormatterDateTime from './FormattedDateTime'
 import ActionDropdown from './ActionDropdown'
 
-interface SupabaseFile {
-    id: string
-    url: string
-    name: string
-    type: string
-    size: number
-    extension: string
-    created_at: string
-    fullname: string
-}
-
 const Card = ({ file }: { file: SupabaseFile }) => {
     return (
         <Link

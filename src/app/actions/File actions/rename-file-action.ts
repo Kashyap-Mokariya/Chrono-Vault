@@ -36,7 +36,4 @@ export const renameFile = async ({
     } catch (error) {
         handleError(error, "Failed to rename file")
     }
-
-
-
 }

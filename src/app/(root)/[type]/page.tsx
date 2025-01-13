@@ -5,17 +5,6 @@ import Sort from '@/components/Sort'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
-interface SupabaseFile {
-    id: string
-    url: string
-    name: string
-    type: string
-    size: number
-    extension: string
-    created_at: string
-    fullname: string
-}
-
 const page = async ({ params }: SearchParamProps) => {
 
     const type = (await params)?.type as string

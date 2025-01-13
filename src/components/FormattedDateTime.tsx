@@ -6,7 +6,7 @@ interface Props {
   className?: string
 }
 
-const FormatterDateTime = ({ date, className }: Props) => {
+const FormattedDateTime = ({ date, className }: Props) => {
   return (
     <p className={cn("body-1 text-light-200", className)}>
       {formatDateTime(date)}
@@ -14,4 +14,4 @@ const FormatterDateTime = ({ date, className }: Props) => {
   )
 }
 
-export default FormatterDateTime
+export default FormattedDateTime
