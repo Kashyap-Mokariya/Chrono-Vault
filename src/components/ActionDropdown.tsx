@@ -24,7 +24,7 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { renameFile } from '@/app/actions/File actions/rename-file-action'
 import { usePathname } from 'next/navigation'
-import { FileDetails } from './Modal/ActionsModalContent'
+import { FileDetails, ShareInput } from './Modal/ActionsModalContent'
 
 const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
 
@@ -33,6 +33,7 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
   const [action, setAction] = useState<ActionType | null>(null)
   const [fileName, setFileName] = useState(file.name)
   const [isLoading, setIsLoading] = useState(false)
+  const [emails, setEmails] = useState<string[]>([])
   const path = usePathname()
 
   const closeAllModals = () => {
@@ -87,6 +88,10 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
     }
   }
 
+  const handleRemoveUser = () => {
+    
+  }
+
   const renderDialogContent = () => {
     if (!action)
       return null
@@ -109,6 +114,14 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
           )}
 
           {value === "details" && (<FileDetails file={file} />)}
+
+          {value === "share" && (
+            <ShareInput
+              file={file}
+              onInputChange={setEmails}
+              onRemove={handleRemoveUser}
+            />)
+            }
 
         </DialogHeader>
         {
