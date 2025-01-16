@@ -29,6 +29,7 @@ declare interface SupabaseFile {
   created_at: string
   fullname: string
   updated_at: string
+  shared_with: string[]
 }
 declare interface GetFilesProps {
   types: FileType[];

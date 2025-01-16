@@ -29,7 +29,10 @@ export const getFiles = async (
             throw new Error("Email is required");
         }
 
-        const { data, error } = await supabase.from("files").select('*').eq("user_id", userId).order("created_at", { ascending: false })
+        const { data, error } = await supabase
+            .from("files")
+            .select("*")
+            .order("created_at", { ascending: false });
 
         if (error) {
             return {

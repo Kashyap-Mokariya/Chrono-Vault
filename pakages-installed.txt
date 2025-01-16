@@ -1,2 +1,5 @@
 pnpm install @supabase/supabase-js @supabase/ssr
 nn i --save-dev eslint-config-standard eslint-plugin-tailwindcss eslint-config-prettier prettier
+
+nn dlx supabase login
+nn dlx supabase gen types typescript --project-id mnlkjjyukanfurmtzmle --schema public > database.types.ts

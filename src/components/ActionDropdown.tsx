@@ -22,7 +22,7 @@ import Link from 'next/link'
 import { constructDownloadUrl } from '@/lib/utils'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { renameFile } from '@/app/actions/File actions/rename-file-action'
+import { renameFile, updateFileUsers } from '@/app/actions/File actions/rename-file-action'
 import { usePathname } from 'next/navigation'
 import { FileDetails, ShareInput } from './Modal/ActionsModalContent'
 
@@ -66,7 +66,7 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
           return false;
         },
         share: async () => {
-          console.log("Share");
+          updateFileUsers({ fileId: file.id, emailsToAdd: emails, path })
           return true;
         },
         delete: async () => {
@@ -88,8 +88,17 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
     }
   }
 
-  const handleRemoveUser = () => {
-    
+  const handleRemoveUser = async (email: string) => {
+    const UpdatedEmails = emails.filter((e) => e !== email)
+
+    const success = await updateFileUsers({
+      fileId: file.id,
+      emailsToRemove: [email],
+      path
+    })
+
+    if (success)
+      setEmails(UpdatedEmails)
   }
 
   const renderDialogContent = () => {
@@ -121,7 +130,7 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
               onInputChange={setEmails}
               onRemove={handleRemoveUser}
             />)
-            }
+          }
 
         </DialogHeader>
         {
