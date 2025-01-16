@@ -30,8 +30,6 @@ export const renameFile = async ({
 
         revalidatePath(path)
 
-        console.log("Updated file: ", updatedFile)
-
         return parseStringify(updatedFile)
     } catch (error) {
         handleError(error, "Failed to rename file")

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useId, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -25,6 +25,8 @@ import { Button } from './ui/button'
 import { renameFile, updateFileUsers } from '@/app/actions/File actions/rename-file-action'
 import { usePathname } from 'next/navigation'
 import { FileDetails, ShareInput } from './Modal/ActionsModalContent'
+import { deleteFile } from '@/app/actions/File actions/delete-file-action'
+import { toast } from 'sonner'
 
 const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
 
@@ -34,6 +36,8 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
   const [fileName, setFileName] = useState(file.name)
   const [isLoading, setIsLoading] = useState(false)
   const [emails, setEmails] = useState<string[]>([])
+
+  const toastId = useId()
   const path = usePathname()
 
   const closeAllModals = () => {
@@ -53,25 +57,47 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
 
       const actions = {
         rename: async () => {
+          const oldFileName = file.name
+
           const updatedFile = await renameFile({
             fileId: file.id,
             name: fileName,
             extension: file.extension,
             path,
           });
-          if (updatedFile && updatedFile?.name) {
-            setFileName(updatedFile.name);
+          if (updatedFile) {
+            setFileName(fileName);
+            toast.success(`"${oldFileName}" was successfully changed to "${fileName}.${file.extension}"`, { id: toastId })
             return true;
+          }
+          else{
+            toast.error('Failed to rename file', { id: toastId })
           }
           return false;
         },
         share: async () => {
-          updateFileUsers({ fileId: file.id, emailsToAdd: emails, path })
-          return true;
+          const fileShared = await updateFileUsers({ fileId: file.id, emailsToAdd: emails, path })
+
+          if (fileShared) {
+            toast.success(`${file.name} shared with - "${emails}" successfully!`, { id: toastId })
+            return true
+          }
+          else {
+            toast.error(`Failed to share ${file.name} with "${emails}"!`, { id: toastId })
+          }
+          return false
         },
         delete: async () => {
-          console.log("Delete");
-          return true;
+          const deletedFile = await deleteFile({fileId: file.id, fileName: file.name, path})
+
+          if (deletedFile) {
+            toast.success(`${file.name} deleted successfully!`, { id: toastId })
+            return true;
+          }
+          else{
+            toast.error(`${file.name} deletion failed!`, { id: toastId })
+          }
+          return false;
         },
       };
 
@@ -126,11 +152,22 @@ const ActionDropdown = ({ file }: { file: SupabaseFile }) => {
 
           {value === "share" && (
             <ShareInput
-              file={file}
-              onInputChange={setEmails}
-              onRemove={handleRemoveUser}
+            file={file}
+            onInputChange={setEmails}
+            onRemove={handleRemoveUser}
             />)
           }
+
+          {value === "delete" && (
+            <p className='delete-confirmation'>
+              Are you sure you want to delete{` `}
+
+              <span className='delete-file-name'>
+                {file.name}
+              </span>?
+
+            </p>
+          )}
 
         </DialogHeader>
         {
