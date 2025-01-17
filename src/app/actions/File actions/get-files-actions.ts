@@ -3,35 +3,19 @@
 import { createClient } from "@/lib/supabase/server"
 import { parseStringify } from "@/lib/utils";
 
-interface Props {
-    email: string | null
-    userId: string | null
-}
-
 const handleError = (error: unknown, message: string) => {
     console.log(error, message)
     throw error
 };
 
-export const getFiles = async (
-    {
-        userId,
-        email
-    }: Props
-) => {
+export const getFiles = async ({ types = [] }: GetFilesProps) => {
     const supabase = await createClient();
 
     try {
-        if (!userId) {
-            throw new Error("User ID is required");
-        }
-        if (!email) {
-            throw new Error("Email is required");
-        }
-
         const { data, error } = await supabase
             .from("files")
             .select("*")
+            .in('type', types)
             .order("created_at", { ascending: false });
 
         if (error) {

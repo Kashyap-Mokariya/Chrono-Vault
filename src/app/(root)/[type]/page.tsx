@@ -2,12 +2,15 @@ import { getFiles } from '@/app/actions/File actions/get-files-actions'
 import { GetUserInfo } from '@/app/actions/user-actions'
 import Card from '@/components/Card '
 import Sort from '@/components/Sort'
+import { getFileTypesParams } from '@/lib/utils'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
 const page = async ({ params }: SearchParamProps) => {
 
     const type = (await params)?.type as string
+
+    const types = getFileTypesParams(type) as FileType[]
 
     const { success, data: currentUser, error } = await GetUserInfo()
 
@@ -18,7 +21,7 @@ const page = async ({ params }: SearchParamProps) => {
 
     const { email, fullName, userId } = currentUser
 
-    const files = await getFiles({ userId, email })
+    const files = await getFiles({types})
 
     return (
         <div className='page-container'>
