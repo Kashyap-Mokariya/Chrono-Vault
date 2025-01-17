@@ -6,9 +6,12 @@ import { getFileTypesParams } from '@/lib/utils'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
-const page = async ({ params }: SearchParamProps) => {
+const page = async ({ searchParams, params }: SearchParamProps) => {
 
     const type = (await params)?.type as string
+
+    const searchText = ((await searchParams)?.query as string) || ""
+    const sort = ((await searchParams)?.sort as string) || ""
 
     const types = getFileTypesParams(type) as FileType[]
 
@@ -21,7 +24,7 @@ const page = async ({ params }: SearchParamProps) => {
 
     const { email, fullName, userId } = currentUser
 
-    const files = await getFiles({types})
+    const files = await getFiles({types, searchText, sort})
 
     return (
         <div className='page-container'>
