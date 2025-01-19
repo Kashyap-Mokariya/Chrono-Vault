@@ -415,15 +415,35 @@
 	}
 
 	/* Sidebar */
-	.sidebar {
+	/* .sidebar {
 		@apply remove-scrollbar hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7 sm:flex lg:w-[280px] xl:w-[325px] !important;
 	}
 	.sidebar-nav {
 		@apply h5 mt-9 flex-1 gap-1 text-brand !important;
+	} */
+
+	.sidebar {
+		@apply remove-scrollbar hidden h-screen w-[90px] flex-col px-5 py-7 sm:flex lg:w-[280px] xl:w-[325px] !important;
+	}
+
+	.sidebar-nav {
+		@apply h5 mt-9 flex-1 text-brand !important;
+		max-height: calc(
+			100vh - 400px
+		); /* Adjust this value based on your logo and user info height */
 	}
 	.sidebar-nav-item {
 		@apply flex text-light-100 gap-4 rounded-xl lg:w-full justify-center lg:justify-start items-center h5 lg:px-[30px] h-[52px] lg:rounded-full !important;
 	}
+	/* .sidebar-user-info {
+		@apply mt-4 flex items-center justify-center gap-2 rounded-full bg-brand/10 p-1 text-light-100 lg:justify-start lg:p-3 !important;
+	} */
+
+	.sidebar-nav ul {
+		@apply remove-scrollbar !important;
+		height: 100%;
+	}
+
 	.sidebar-user-info {
 		@apply mt-4 flex items-center justify-center gap-2 rounded-full bg-brand/10 p-1 text-light-100 lg:justify-start lg:p-3 !important;
 	}
