@@ -30,11 +30,7 @@ export const uploadFile = async ({
             handleError(error, "Failed to upload file to Supabase");
         }
 
-        console.log("file data: ", data)
-
         const urlData = await storage.from("files").getPublicUrl(data ? data.path : "").data.publicUrl
-
-        console.log(urlData)
 
         const fileDocument: Database["public"]["Tables"]["files"]["Insert"] = {
             type: getFileType(data ? data.path : "").type,

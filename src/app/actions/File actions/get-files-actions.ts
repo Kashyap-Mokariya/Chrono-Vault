@@ -20,18 +20,26 @@ export const getFiles = async ({
     const order = orderBy === "desc" ? false : true;
 
     try {
-        const { data, error } = await supabase
-            .from("files")
-            .select("*")
-            .in("type", types)
-            .ilike("name", `%${searchText}%`)
-            .order(sortBy, {
-                ascending: order,
-            })
-            // .order(sort.split("-")[0], {
-            //     ascending: sort.startsWith("asc"),
-            // })
-            .limit(limit);
+        let query = supabase.from("files").select("*")
+
+        if (types.length > 0) {
+            query = query
+                .in("type", types)
+                .ilike("name", `%${searchText}%`)
+                .order(sortBy, {
+                    ascending: order,
+                })
+                .limit(limit);
+        } else {
+            query = query
+                .ilike("name", `%${searchText}%`)
+                .order(sortBy, {
+                    ascending: order,
+                })
+                .limit(limit);
+        }
+
+        const {data, error} = await query
 
         if (error) {
             return {
