@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react'
 import Thumbnail from '../Thumbnail'
 import FormattedDateTime from '../FormattedDateTime'
@@ -5,6 +7,11 @@ import { convertFileSize, formatDateTime } from '@/lib/utils'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import Image from 'next/image'
+import { AssemblyAI, TranscriptParams } from 'assemblyai';
+
+const client = new AssemblyAI({
+  apiKey: '5f5eba2119924ec5a92e5a56aa640026',
+});
 
 interface Props {
   file: SupabaseFile
@@ -52,6 +59,33 @@ export const FileDetails = ({ file }: { file: SupabaseFile }) => {
       <DetailRow label='Size: ' value={convertFileSize(file.size)} />
       <DetailRow label='Owner: ' value={file.fullname} />
       <DetailRow label='Last edited: ' value={formatDateTime(file.updated_at)} />
+    </>
+  )
+}
+
+export const TranscribedText = async ({ file }: { file: SupabaseFile }) => {
+
+  const FILE_URL = file.url;
+
+  const data: TranscriptParams = {
+    audio_url: FILE_URL,
+    speech_model: 'nano',
+    language_detection: true,
+  }
+
+  const transcript = await client.transcripts.transcribe(data);
+  console.log(transcript.text);
+
+  const transcribedText = file.transcription
+
+  return (
+    <>
+      <ImageThumbnail file={file} />
+      
+      <p>Transcribed Text:</p>
+      <p>
+        {transcribedText}
+      </p>
     </>
   )
 }

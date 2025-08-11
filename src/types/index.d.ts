@@ -30,6 +30,7 @@ declare interface SupabaseFile {
   fullname: string
   updated_at: string
   shared_with: string[]
+  transcription: string
 }
 declare interface GetFilesProps {
   types?: FileType[];
@@ -52,6 +53,10 @@ declare interface DeleteFileProps {
   fileId: string;
   fileName: string;
   path: string;
+}
+declare interface Transcription {
+  fileId: string;
+  transcribedText: String | null | undefined;
 }
 
 declare interface FileUploaderProps {
