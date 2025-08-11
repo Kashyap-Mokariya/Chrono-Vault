@@ -63,18 +63,7 @@ export const FileDetails = ({ file }: { file: SupabaseFile }) => {
   )
 }
 
-export const TranscribedText = async ({ file }: { file: SupabaseFile }) => {
-
-  const FILE_URL = file.url;
-
-  const data: TranscriptParams = {
-    audio_url: FILE_URL,
-    speech_model: 'nano',
-    language_detection: true,
-  }
-
-  const transcript = await client.transcripts.transcribe(data);
-  console.log(transcript.text);
+export const TranscribedText = ({ file }: { file: SupabaseFile }) => {
 
   const transcribedText = file.transcription
 
